@@ -12,7 +12,10 @@ import java.util.concurrent.TimeoutException;
 public class RabbitConsumer {
 
     public static final String QUEUE_NAME = "queue_demo";
-    public static final String IP_ADDRESS = "192.168.0.123";
+    public static final String QUEUE_NAME2 = "queue_demo2";
+
+    //    public static final String IP_ADDRESS = "192.168.0.123";
+    public static final String IP_ADDRESS = "218.17.140.132";
     public static final int PORT= 5672;
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
@@ -20,7 +23,7 @@ public class RabbitConsumer {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setUsername("root");
         factory.setPassword("root123");
-        Connection connection = factory.newConnection();
+        Connection connection = factory.newConnection(addresses);
         Channel channel = connection.createChannel();
         channel.basicQos(64);
         Consumer consumer = new DefaultConsumer(channel){
@@ -35,7 +38,7 @@ public class RabbitConsumer {
                 channel.basicAck(envelope.getDeliveryTag(), false);
             }
         };
-        channel.basicConsume(QUEUE_NAME, consumer);
+        channel.basicConsume(QUEUE_NAME2, consumer);
         TimeUnit.SECONDS.sleep(5);
         channel.close();
         connection.close();
