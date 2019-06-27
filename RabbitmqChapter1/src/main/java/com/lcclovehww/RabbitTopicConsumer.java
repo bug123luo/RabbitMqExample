@@ -14,6 +14,7 @@ public class RabbitTopicConsumer {
 
     public static final String QUEUE_NAME = "topic_queue_demo_1";
     public static final String QUEUE_NAME2 = "topic_queue_demo_2";
+    public static final String QUEUE_NAME3 = "first.mqtt";
     //    public static final String IP_ADDRESS = "192.168.0.123";
     public static final String IP_ADDRESS = "218.17.140.132";
     public static final int PORT= 5672;
@@ -38,7 +39,7 @@ public class RabbitTopicConsumer {
                 channel.basicAck(envelope.getDeliveryTag(), false);
             }
         };
-        channel.basicConsume(QUEUE_NAME, consumer);
+        channel.basicConsume(QUEUE_NAME3, consumer);
         TimeUnit.SECONDS.sleep(5);
         channel.close();
         connection.close();

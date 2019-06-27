@@ -14,7 +14,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class RabbitTopicProducer {
 
-    public static final String EXCHANGE_NAME="exchange_demo";
+    public static final String EXCHANGE_NAME="topic_exchange_demo";
     public static final String Binding_KEY = "*.rabbitmq.*";
     public static final String Binding_KEY2 = "*.*.client";
     public static final String Binding_KEY3 = "com.#";
@@ -38,7 +38,7 @@ public class RabbitTopicProducer {
         factory.setPassword("root123");
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.exchangeDeclare(EXCHANGE_NAME,"direct", true, false,null);
+        channel.exchangeDeclare(EXCHANGE_NAME,"topic", true, false,null);
         channel.queueDeclare(QUEUE_NAME, true, false, false, null);
         channel.queueDeclare(QUEUE_NAME2, true, false, false, null);
         channel.queueBind(QUEUE_NAME2,EXCHANGE_NAME, Binding_KEY);
@@ -47,10 +47,13 @@ public class RabbitTopicProducer {
         String message = "Hello World!";
         String message2 = "Hello World!!";
         String message3 = "Hello World!!!";
+        String message4 = "Hello World!!!!";
+        String message5 = "Hello World!!!!!";
         channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
         channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY2, MessageProperties.PERSISTENT_TEXT_PLAIN, message2.getBytes());
         channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY3, MessageProperties.PERSISTENT_TEXT_PLAIN, message3.getBytes());
-        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY4, MessageProperties.PERSISTENT_TEXT_PLAIN, message3.getBytes());
+        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY4, MessageProperties.PERSISTENT_TEXT_PLAIN, message4.getBytes());
+        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY5, MessageProperties.PERSISTENT_TEXT_PLAIN, message5.getBytes());
         channel.close();
         connection.close();
     }
