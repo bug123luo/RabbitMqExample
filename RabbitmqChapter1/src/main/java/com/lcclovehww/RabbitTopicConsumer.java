@@ -20,14 +20,21 @@ public class RabbitTopicConsumer {
     public static final int PORT= 5672;
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
-        Address[] addresses = new Address[]{new Address(IP_ADDRESS, PORT)};
-        ConnectionFactory factory = new ConnectionFactory();
+
+        Address[] addresses = null;
+        ConnectionFactory factory = null;
+        Connection connection = null;
+        Channel channel = null;
+        addresses = new Address[]{new Address(IP_ADDRESS, PORT)};
+        factory = new ConnectionFactory();
         factory.setUsername("root");
         factory.setPassword("root123");
-        Connection connection = factory.newConnection(addresses);
-        Channel channel = connection.createChannel();
+        connection = factory.newConnection(addresses);
+        channel = connection.createChannel();
         channel.basicQos(64);
-        Consumer consumer = new DefaultConsumer(channel){
+
+        Channel finalChannel = channel;
+        Consumer consumer = new DefaultConsumer(finalChannel){
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 System.out.println("recv message: "+new String(body));
@@ -36,9 +43,10 @@ public class RabbitTopicConsumer {
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }
-                channel.basicAck(envelope.getDeliveryTag(), false);
+                finalChannel.basicAck(envelope.getDeliveryTag(), false);
             }
         };
+
         channel.basicConsume(QUEUE_NAME3, consumer);
         TimeUnit.SECONDS.sleep(5);
         channel.close();
