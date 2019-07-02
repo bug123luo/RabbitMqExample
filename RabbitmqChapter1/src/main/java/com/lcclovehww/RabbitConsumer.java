@@ -2,6 +2,7 @@ package com.lcclovehww;
 
 import com.rabbitmq.client.*;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -25,7 +26,16 @@ public class RabbitConsumer {
         factory.setPassword("root123");
         Connection connection = factory.newConnection(addresses);
         Channel channel = connection.createChannel();
-        channel.basicQos(64);
+        try {
+            channel.basicQos(64);
+        }catch(ShutdownSignalException sse){//以下捕获的异常是为了判断这个Channel未关闭的问题
+             sse.printStackTrace();
+        }catch (SocketException se){
+            se.printStackTrace();
+        }catch (IOException is){
+            is.printStackTrace();
+        }
+
         Consumer consumer = new DefaultConsumer(channel){
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {

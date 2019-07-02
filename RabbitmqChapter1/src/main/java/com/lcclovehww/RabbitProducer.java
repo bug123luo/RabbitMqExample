@@ -44,9 +44,10 @@ public class RabbitProducer {
         String message = "Hello World!";
         String message2 = "Hello World!!";
         String message3 = "Hello World!!!";
-        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
-        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY2, MessageProperties.PERSISTENT_TEXT_PLAIN, message2.getBytes());
-        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY3, MessageProperties.PERSISTENT_TEXT_PLAIN, message3.getBytes());
+        boolean mandatory = true;//true表示消息持久化 false表示消息非持久化
+        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, mandatory, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
+        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY2, mandatory, MessageProperties.PERSISTENT_TEXT_PLAIN, message2.getBytes());
+        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY3, mandatory, MessageProperties.PERSISTENT_TEXT_PLAIN, message3.getBytes());
         channel.close();
         connection.close();
     }
