@@ -1,4 +1,4 @@
-package com.lcclovehww.GuardedSuspension;
+package com.lcclovehww.guardedSuspension;
 
 import java.util.Random;
 
